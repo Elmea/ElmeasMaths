@@ -5,6 +5,7 @@
 #define RAD2DEG 180/MY_PI
 
 #define FLOATCOMPACCURATE 0.0001f
+#include <math.h>
 
 namespace FoxMaths
 {
@@ -84,7 +85,7 @@ namespace FoxMaths
         static Float3 Lerp(const Float3& a, const Float3& b, const float& time);
     };
 
-    inline bool operator==(const EmMaths::Float3& f1, const EmMaths::Float3& f2)
+    inline bool operator==(const FoxMaths::Float3& f1, const FoxMaths::Float3& f2)
     {
         return ((f1.x == f2.x) && (f1.y == f2.y) && (f1.z == f2.z));
     }
