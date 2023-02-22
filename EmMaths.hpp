@@ -6,7 +6,7 @@
 
 #define FLOATCOMPACCURATE 0.0001f
 
-namespace EmMaths
+namespace FoxMaths
 {
     // ----------------- [Vector] -----------------
 #pragma region Vector
@@ -276,7 +276,7 @@ namespace EmMaths
     }
 #pragma endregion
 
-#ifdef EMMATHS_DECLARATION
+#ifdef FOXMATHS_DECLARATION
 
 #pragma region Float2
 
