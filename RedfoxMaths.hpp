@@ -277,7 +277,7 @@ namespace FoxMaths
     }
 #pragma endregion
 
-#ifdef FOXMATHS_DECLARATION
+#ifdef FOXMATHS_IMPLEMENTATION
 
 #pragma region Float2
 
