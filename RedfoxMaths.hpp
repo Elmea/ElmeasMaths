@@ -6,6 +6,7 @@
 
 #define FLOATCOMPACCURATE 0.0001f
 #include <math.h>
+#include <cstdarg>
 
 namespace FoxMaths
 {
@@ -67,21 +68,20 @@ namespace FoxMaths
 
         Float3(float x = 0, float y = 0, float z = 0);
 
-        float magnitude();
+        float Magnitude();
+        void Normalize();
 
-        void normalize();
-
-        Float3 getNormalized();
+        Float3 GetNormalized();
 
         bool operator==(Float3 other)
         {
             return (x <= other.x + FLOATCOMPACCURATE && x >= other.x - FLOATCOMPACCURATE) && (y <= other.y +
                 FLOATCOMPACCURATE && y >= other.y - FLOATCOMPACCURATE) && (z <= other.z + FLOATCOMPACCURATE && z >=
-                other.z - FLOATCOMPACCURATE);
+                    other.z - FLOATCOMPACCURATE);
         }
 
 
-        static Float3 getSphericalCoords(float r, float theta, float phi);
+        static Float3 GetSphericalCoords(float r, float theta, float phi);
         static Float3 Lerp(const Float3& a, const Float3& b, const float& time);
     };
 
@@ -98,7 +98,7 @@ namespace FoxMaths
         float z;
         float w;
 
-        float dotProduct(Float4& other) const;
+        float DotProduct(Float4& other) const;
 
         Float4 operator+(Float4& other);
         Float4 operator*(float& multiplicator);
@@ -106,14 +106,14 @@ namespace FoxMaths
         Float4(const Float3& f3, float w = 1.0f);
         Float4(float x = 0, float y = 0, float z = 0, float w = 1.0f);
 
-        float magnitude();
+        float Magnitude();
 
-        void normalize();
-        Float4 getNormalized();
+        void Normalize();
+        Float4 GetNormalized();
 
-        void homogenize();
-        Float4 getHomogenized();
-        Float3 getXYZF3();
+        void Homogenize();
+        Float4 GetHomogenized();
+        Float3 GetXYZF3();
 
         inline void operator=(const Float3& f3)
         {
@@ -131,22 +131,22 @@ namespace FoxMaths
 #pragma region Matrix
 
     class Quaternion;
-    
+
     class Mat4
     {
     private:
-        Mat4 getSubmat(int l, int c);
+        Mat4 GetSubmat(int l, int c);
 
     public:
         Mat4();
         Mat4(float matrix[4][4]);
-        
-        static Mat4 getRotationX(const float& angle);
-        static Mat4 getRotationY(const float& angle);
-        static Mat4 getRotationZ(const float& angle);
 
-        static Mat4 getTranslation(const Float3& translation);
-        static Mat4 getScale(const Float3& scale);
+        static Mat4 GetRotationX(const float& angle);
+        static Mat4 GetRotationY(const float& angle);
+        static Mat4 GetRotationZ(const float& angle);
+
+        static Mat4 GetTranslation(const Float3& translation);
+        static Mat4 GetScale(const Float3& scale);
 
         float mat[4][4] = {
             {1.f, 0.f, 0.f, 0.f},
@@ -167,16 +167,16 @@ namespace FoxMaths
         Mat4 operator*(const int& mult);
 
         const float* AsPtr() const;
-        
-        Mat4 getTransposedMatrix();
 
-        float getDeterminent();
-        Mat4 getComplementaryMat();
-        Mat4 getCoMatrix();
-        Mat4 getInverseMatrix();
-        static Mat4 getIndentityMatrix();
+        Mat4 GetTransposedMatrix();
 
-        Float4 getMatLine(int index);
+        float GetDeterminent();
+        Mat4 GetComplementaryMat();
+        Mat4 GetCoMatrix();
+        Mat4 GetInverseMatrix();
+        static Mat4 GetIndentityMatrix();
+
+        Float4 GetMatLine(int index);
     };
 
     Mat4 operator*(const float& mult, const Mat4& matrix);
@@ -198,33 +198,33 @@ namespace FoxMaths
         Quaternion(const Float3& eulerAngles);
 
         void Normalize();
-        Quaternion GetNormalized() const; 
+        Quaternion GetNormalized() const;
 
         float Modulus() const;
         float SquaredModulus() const;
 
         //Return corresponding rotation matrix
         Mat4 GetRotationMatrix() const;
-        
+
         static Quaternion Hamilton(const Quaternion& right, const Quaternion& left);
-        
+
         //Return a Quaternion from corresponding Euler Angles
         static Quaternion Euler(const float& roll, const float& pitch, const float& yaw);
         //Return a Quaternion from corresponding Euler Angles
         static Quaternion Euler(const Float3& eulerAngles);
-        
+
         //Return a Quaternion from corresponding axis and radian angle
         static Quaternion AngleAxis(const Float3& axis, const float& angle);
-        
+
         static Quaternion SLerp(const Quaternion& first, const Quaternion& second, float t);
         static Quaternion NLerp(const Quaternion& first, const Quaternion& second, float t);
 
         static float DotProduct(const Quaternion& first, const Quaternion& second);
-        
+
         Quaternion operator*(const Quaternion& other) const;
         Quaternion operator*(const float& other) const;
         Quaternion operator+(const Quaternion& other) const;
-    }; 
+    };
 
 
 #pragma endregion
@@ -256,7 +256,7 @@ namespace FoxMaths
         {
             return a > b ? a : b;
         }
-        
+
         template <typename T>
         T Abs(const T& a)
         {
@@ -264,7 +264,7 @@ namespace FoxMaths
         }
 
         float Lerp(const float& t, const float& a, const float& b);
-        
+
         float Pythagoreantheorem(int nb_values, ...);
 
         float getPointYByLineEquation(Float2 line, Float2 point);
@@ -308,7 +308,7 @@ namespace FoxMaths
 
     Float2 Float2::operator*(float& multiplicator)
     {
-        return {x * multiplicator, y * multiplicator};
+        return { x * multiplicator, y * multiplicator };
     }
 
     float Float2::Magnitude()
@@ -352,28 +352,28 @@ namespace FoxMaths
         return x * vec3.x + y * vec3.y + z * vec3.z;
     }
 
-    float Float3::magnitude()
+    float Float3::Magnitude()
     {
         return sqrtf(x * x + y * y + z * z);
     }
 
-    void Float3::normalize()
+    void Float3::Normalize()
     {
-        float mag = magnitude();
+        float mag = Magnitude();
 
         x = x / mag;
         y = y / mag;
         z = z / mag;
     }
 
-    Float3 Float3::getNormalized()
+    Float3 Float3::GetNormalized()
     {
-        float mag = magnitude();
+        float mag = Magnitude();
 
-        return {x / mag, y / mag, z / mag};
+        return { x / mag, y / mag, z / mag };
     }
 
-    Float3 Float3::getSphericalCoords(float r, float theta, float phi)
+    Float3 Float3::GetSphericalCoords(float r, float theta, float phi)
     {
         return {
             r * sinf(theta) * cosf(phi),
@@ -384,10 +384,10 @@ namespace FoxMaths
 
     Float3 Float3::Lerp(const Float3& a, const Float3& b, const float& time)
     {
-        return Float3(Misc::Lerp(time, a.x,b.x), Misc::Lerp(time, a.y, b.y), Misc::Lerp(time, a.z, b.z));
+        return Float3(Misc::Lerp(time, a.x, b.x), Misc::Lerp(time, a.y, b.y), Misc::Lerp(time, a.z, b.z));
     }
 
-    #pragma region operators
+#pragma region operators
     Float3 Float3::operator+(Float3& other)
     {
         Float3 result;
@@ -399,7 +399,7 @@ namespace FoxMaths
 
     Float3 operator+(const Float3& left, const Float3& right)
     {
-        return {left.x + right.x, left.y + right.y, left.z + right.z};
+        return { left.x + right.x, left.y + right.y, left.z + right.z };
     }
 
     Float3 Float3::operator-(Float3& other)
@@ -413,27 +413,27 @@ namespace FoxMaths
 
     Float3 Float3::operator-()
     {
-        return {-x, -y, -z};
+        return { -x, -y, -z };
     }
 
     Float3 operator-(const Float3& left, const Float3& right)
     {
-        return {left.x - right.x, left.y - right.y, left.z - right.z};
+        return { left.x - right.x, left.y - right.y, left.z - right.z };
     }
 
     Float3 Float3::operator*(float& multiplicator)
     {
-        return {x * multiplicator, y * multiplicator, z * multiplicator};
+        return { x * multiplicator, y * multiplicator, z * multiplicator };
     }
 
     Float3 operator*(const Float3& left, const float multiplier)
     {
-        return {left.x * multiplier, left.y * multiplier, left.z * multiplier};
+        return { left.x * multiplier, left.y * multiplier, left.z * multiplier };
     }
 
     Float3 operator/(const Float3& left, const float divider)
     {
-        return {left.x / divider, left.y / divider, left.z / divider};
+        return { left.x / divider, left.y / divider, left.z / divider };
     }
 
     Float3& operator+=(Float3& left, const Float3& right)
@@ -462,7 +462,7 @@ namespace FoxMaths
 
     Float3 Float3::operator*(int& multiplicator)
     {
-        return {x * multiplicator, y * multiplicator, z * multiplicator};
+        return { x * multiplicator, y * multiplicator, z * multiplicator };
     }
 
     bool operator<(const Float3& left, const Float3& right)
@@ -496,7 +496,7 @@ namespace FoxMaths
         else
             return false;
     }
-    #pragma endregion 
+#pragma endregion 
 
 #pragma endregion
 
@@ -518,7 +518,7 @@ namespace FoxMaths
         w = inw;
     }
 
-    float Float4::dotProduct(Float4& other) const
+    float Float4::DotProduct(Float4& other) const
     {
         return x * other.x + y * other.y + z * other.z + w * other.w;
     }
@@ -534,17 +534,17 @@ namespace FoxMaths
 
     Float4 Float4::operator*(float& multiplicator)
     {
-        return {x * multiplicator, y * multiplicator, z * multiplicator, w * multiplicator};
+        return { x * multiplicator, y * multiplicator, z * multiplicator, w * multiplicator };
     }
 
-    float Float4::magnitude()
+    float Float4::Magnitude()
     {
         return sqrtf(x * x + y * y + z * z);
     }
 
-    void Float4::normalize()
+    void Float4::Normalize()
     {
-        float mag = magnitude();
+        float mag = Magnitude();
 
         x = x / mag;
         y = y / mag;
@@ -552,14 +552,14 @@ namespace FoxMaths
         w = w / mag;
     }
 
-    Float4 Float4::getNormalized()
+    Float4 Float4::GetNormalized()
     {
-        float mag = magnitude();
+        float mag = Magnitude();
 
-        return {x / mag, y / mag, z / mag, w / mag};
+        return { x / mag, y / mag, z / mag, w / mag };
     }
 
-    void Float4::homogenize()
+    void Float4::Homogenize()
     {
         if (w != 0)
         {
@@ -570,16 +570,16 @@ namespace FoxMaths
         }
     }
 
-    Float4 Float4::getHomogenized()
+    Float4 Float4::GetHomogenized()
     {
         if (w != 0)
-            return {x / w, y / w, z / w, w / w};
-        return {x, y, z, w};
+            return { x / w, y / w, z / w, w / w };
+        return { x, y, z, w };
     }
 
-    Float3 Float4::getXYZF3()
+    Float3 Float4::GetXYZF3()
     {
-        return {x, y, z};
+        return { x, y, z };
     }
 #pragma endregion
 
@@ -588,7 +588,7 @@ namespace FoxMaths
 
     Mat4::Mat4()
     {}
-    
+
     Mat4::Mat4(float matrix[4][4])
     {
         for (int i = 0; i < 4; i++)
@@ -600,8 +600,8 @@ namespace FoxMaths
         }
     }
 
-    #pragma region Operators
-    
+#pragma region Operators
+
     void Mat4::operator=(const Mat4& other)
     {
         for (int i = 0; i < 4; i++)
@@ -675,7 +675,7 @@ namespace FoxMaths
         }
         return result;
     }
-    
+
     Mat4 Mat4::operator*(const int& mult)
     {
         Mat4 result;
@@ -705,14 +705,14 @@ namespace FoxMaths
         return result;
     }
 
-    #pragma endregion
+#pragma endregion
 
     const float* Mat4::AsPtr() const
     {
         return &mat[0][0];
     }
-    
-    Mat4 Mat4::getRotationX(const float& angle)
+
+    Mat4 Mat4::GetRotationX(const float& angle)
     {
         Mat4 result;
         result.mat[0][0] = 1;
@@ -725,7 +725,7 @@ namespace FoxMaths
         return result;
     }
 
-    Mat4 Mat4::getRotationY(const float& angle)
+    Mat4 Mat4::GetRotationY(const float& angle)
     {
         Mat4 result;
         result.mat[1][1] = 1;
@@ -738,7 +738,7 @@ namespace FoxMaths
         return result;
     }
 
-    Mat4 Mat4::getRotationZ(const float& angle)
+    Mat4 Mat4::GetRotationZ(const float& angle)
     {
         Mat4 result;
         result.mat[2][2] = 1;
@@ -751,7 +751,7 @@ namespace FoxMaths
         return result;
     }
 
-    Mat4 Mat4::getTranslation(const Float3& translation)
+    Mat4 Mat4::GetTranslation(const Float3& translation)
     {
         Mat4 result;
 
@@ -767,7 +767,7 @@ namespace FoxMaths
         return result;
     }
 
-    Mat4 Mat4::getScale(const Float3& scale)
+    Mat4 Mat4::GetScale(const Float3& scale)
     {
         Mat4 result;
         result.mat[0][0] = scale.x;
@@ -780,16 +780,16 @@ namespace FoxMaths
 
     Mat4 Mat4::CreateTransformMatrix(const Float3& position, const Float3& rotationDEG, const Float3& scale)
     {
-        return getTranslation(position) * getRotationY(DEG2RAD * rotationDEG.y) * getRotationX(DEG2RAD * rotationDEG.x)
-            * getRotationZ(DEG2RAD * rotationDEG.z) * getScale(scale);
+        return GetTranslation(position) * GetRotationY(DEG2RAD * rotationDEG.y) * GetRotationX(DEG2RAD * rotationDEG.x)
+            * GetRotationZ(DEG2RAD * rotationDEG.z) * GetScale(scale);
     }
 
     Mat4 Mat4::CreateTransformMatrix(const Float3& position, const Quaternion& rotation, const Float3& scale)
     {
-        return getTranslation(position) * rotation.GetRotationMatrix() * getScale(scale);  
+        return GetTranslation(position) * rotation.GetRotationMatrix() * GetScale(scale);
     }
-    
-    Mat4 Mat4::getTransposedMatrix()
+
+    Mat4 Mat4::GetTransposedMatrix()
     {
         Mat4 result;
         for (int i = 0; i < 4; i++)
@@ -802,14 +802,14 @@ namespace FoxMaths
         return result;
     }
 
-    float Mat4::getDeterminent()
+    float Mat4::GetDeterminent()
     {
         return mat[0][0] * (mat[1][1] * mat[2][2] * mat[3][3] //afkp
-                - mat[1][1] * mat[2][3] * mat[3][2] //aflo
-                - mat[1][2] * mat[2][1] * mat[3][3] //agjp
-                + mat[1][2] * mat[2][3] * mat[3][1] //agln
-                + mat[1][3] * mat[2][1] * mat[3][2] //ahjo
-                - mat[1][3] * mat[2][2] * mat[3][1]) //ahkn '
+            - mat[1][1] * mat[2][3] * mat[3][2] //aflo
+            - mat[1][2] * mat[2][1] * mat[3][3] //agjp
+            + mat[1][2] * mat[2][3] * mat[3][1] //agln
+            + mat[1][3] * mat[2][1] * mat[3][2] //ahjo
+            - mat[1][3] * mat[2][2] * mat[3][1]) //ahkn '
 
             - mat[0][1] * (mat[1][0] * mat[2][2] * mat[3][3] //bekp
                 - mat[1][0] * mat[2][3] * mat[3][2] //belo
@@ -834,7 +834,7 @@ namespace FoxMaths
             ;
     }
 
-    Mat4 Mat4::getIndentityMatrix()
+    Mat4 Mat4::GetIndentityMatrix()
     {
         Mat4 res;
         float matrice[4][4] = {
@@ -848,7 +848,7 @@ namespace FoxMaths
         return res;
     }
 
-    Mat4 Mat4::getSubmat(int l, int c)
+    Mat4 Mat4::GetSubmat(int l, int c)
     {
         Mat4 sub;
         int line = 0;
@@ -872,7 +872,7 @@ namespace FoxMaths
         return sub;
     }
 
-    Mat4 Mat4::getCoMatrix()
+    Mat4 Mat4::GetCoMatrix()
     {
         Mat4 result;
         for (int i = 0; i < 4; i++)
@@ -880,32 +880,32 @@ namespace FoxMaths
             for (int j = 0; j < 4; j++)
             {
                 if ((i + j + 1) % 2 == 0)
-                    result.mat[i][j] = -getSubmat(i, j).getDeterminent();
+                    result.mat[i][j] = -GetSubmat(i, j).GetDeterminent();
                 else
-                    result.mat[i][j] = getSubmat(i, j).getDeterminent();
+                    result.mat[i][j] = GetSubmat(i, j).GetDeterminent();
             }
         }
 
         return result;
     }
 
-    Mat4 Mat4::getComplementaryMat()
+    Mat4 Mat4::GetComplementaryMat()
     {
-        return getCoMatrix().getTransposedMatrix();
+        return GetCoMatrix().GetTransposedMatrix();
     }
 
     //If determinent is nul, return identity
-    Mat4 Mat4::getInverseMatrix()
+    Mat4 Mat4::GetInverseMatrix()
     {
-        float det = getDeterminent();
+        float det = GetDeterminent();
 
         if (Misc::Abs(det) < 0.000005f)
-            return getIndentityMatrix();
+            return GetIndentityMatrix();
 
-        return getComplementaryMat() * (1.f / det);
+        return GetComplementaryMat() * (1.f / det);
     }
 
-    Float4 Mat4::getMatLine(int index)
+    Float4 Mat4::GetMatLine(int index)
     {
         if (index < 0 && index > 3)
             return 0;
@@ -917,10 +917,10 @@ namespace FoxMaths
     // --------------------------[Quaternion]--------------------------
 #pragma region Quaternion
 
-    #pragma region Constructors
+#pragma region Constructors
     Quaternion::Quaternion() : a(0), b(0), c(0), d(0)
     {}
-    
+
     Quaternion::Quaternion(const float& _a, const float& _b, const float& _c, const float& _d) :
         a(_a), b(_b), c(_c), d(_d)
     {}
@@ -929,12 +929,12 @@ namespace FoxMaths
     {
         *this = Euler(roll, pitch, yaw);
     }
-    
-    Quaternion::Quaternion(const Float3&  eulerAngles)
+
+    Quaternion::Quaternion(const Float3& eulerAngles)
     {
         *this = Euler(eulerAngles);
     }
-    #pragma endregion
+#pragma endregion
 
     float Quaternion::SquaredModulus() const
     {
@@ -945,7 +945,7 @@ namespace FoxMaths
     {
         return sqrtf(a * a + b * b + c * c + d * d);
     }
-    
+
     void Quaternion::Normalize()
     {
         float mod = Modulus();
@@ -959,11 +959,11 @@ namespace FoxMaths
     Mat4 Quaternion::GetRotationMatrix() const
     {
         float matrix[4][4] =
-            {{2*(a*a + b*b) - 1,    2*(b*c - d*a),      2*(b*d + c*a),  0},
-            {2*(b*c + d*a),         2*(a*a + c*c) - 1,  2*(c*d - b*a),  0},
-            {2*(b*d - c*a),         2*(c*d + b*a),      2*(a*a + d*d) - 1,  0},
-            {0,                     0,                  0,              1.f} };
-        
+        { {2 * (a * a + b * b) - 1,    2 * (b * c - d * a),      2 * (b * d + c * a),  0},
+        {2 * (b * c + d * a),         2 * (a * a + c * c) - 1,  2 * (c * d - b * a),  0},
+        {2 * (b * d - c * a),         2 * (c * d + b * a),      2 * (a * a + d * d) - 1,  0},
+        {0,                     0,                  0,              1.f} };
+
         return matrix;
     }
 
@@ -971,10 +971,10 @@ namespace FoxMaths
     {
         float mod = Modulus();
 
-        return {a / mod, b / mod, c / mod, d / mod};
+        return { a / mod, b / mod, c / mod, d / mod };
     }
-    
-    #pragma  region StaticsMethods
+
+#pragma  region StaticsMethods
     Quaternion Quaternion::Hamilton(const Quaternion& right, const Quaternion& left)
     {
         Quaternion result;
@@ -990,7 +990,7 @@ namespace FoxMaths
     Quaternion Quaternion::Euler(const float& roll, const float& pitch, const float& yaw)
     {
         Quaternion result;
-        
+
         const float cr = cosf(roll * 0.5f);
         const float sr = sinf(roll * 0.5f);
         const float cp = cosf(pitch * 0.5f);
@@ -1005,7 +1005,7 @@ namespace FoxMaths
 
         return result;
     }
-    
+
     Quaternion Quaternion::Euler(const Float3& EulerAngles)
     {
         return Euler(EulerAngles.x, EulerAngles.y, EulerAngles.z);
@@ -1015,16 +1015,16 @@ namespace FoxMaths
     {
         Quaternion result;
 
-        float sinTetha = sin(angle/2);
-        
-        result.a = cosf(angle/2);
+        float sinTetha = sin(angle / 2);
+
+        result.a = cosf(angle / 2);
         result.b = sinTetha * axis.x;
         result.c = sinTetha * axis.y;
         result.d = sinTetha * axis.z;
 
         return result;
     }
-    
+
     float Quaternion::DotProduct(const Quaternion& first, const Quaternion& second)
     {
         return  first.a * second.a + first.b * second.b + first.c * second.c + first.d * second.d;
@@ -1036,7 +1036,7 @@ namespace FoxMaths
         float alpha = acosf(DotProduct(first, second));
         const float sinAlpha = sinf(alpha);
 
-    #if 0
+#if 0
         const float sinInvTAlpha = sinf((1 - t) * alpha);
         const float sinTAlpha = sinf(t * alpha);
 
@@ -1047,10 +1047,10 @@ namespace FoxMaths
         result.d = sinInvTAlpha / sinAlpha * first.d + sinTAlpha / sinAlpha * second.d;
 
         result.Normalize();
-        
+
         return result;
-    #endif
-        
+#endif
+
         return (first * (sinf((1 - t) * alpha) / sinAlpha) + second * (sinf(t * alpha) / sinAlpha)).GetNormalized();
     }
 
@@ -1058,9 +1058,9 @@ namespace FoxMaths
     {
         return (first * (1 - t) + second * t).GetNormalized();
     }
-    #pragma endregion
+#pragma endregion
 
-    #pragma region Operators
+#pragma region Operators
     Quaternion Quaternion::operator*(const Quaternion& other) const
     {
         return Hamilton(*this, other);
@@ -1068,14 +1068,14 @@ namespace FoxMaths
 
     Quaternion Quaternion::operator+(const Quaternion& other) const
     {
-        return {this->a + other.a, this->b + other.b, this->c + other.c, this->d + other.d};
+        return { this->a + other.a, this->b + other.b, this->c + other.c, this->d + other.d };
     }
 
     Quaternion Quaternion::operator*(const float& other) const
     {
-        return {a * other, b * other, c * other, d * other};
+        return { a * other, b * other, c * other, d * other };
     }
-    #pragma endregion
+#pragma endregion
 
 #pragma endregion
 
@@ -1087,7 +1087,7 @@ namespace FoxMaths
         {
             return t * a + (1 - t) * b;
         }
-        
+
         float Clamp(const float value, const float min, const float max)
         {
             if (value < min)
@@ -1096,7 +1096,7 @@ namespace FoxMaths
                 return max;
             return value;
         }
-        
+
         float Pythagoreantheorem(int nb_values, ...)
         {
             va_list args;
@@ -1125,7 +1125,7 @@ namespace FoxMaths
         {
             va_list args;
             Float2 nextValue;
-            Float2 result = {0, 0};
+            Float2 result = { 0, 0 };
 
             va_start(args, nb_values);
 
@@ -1145,7 +1145,7 @@ namespace FoxMaths
 
         Float3 barrycentreF3(Float3 point1, Float3 point2, Float3 point3)
         {
-            Float3 result = {0, 0, 0};
+            Float3 result = { 0, 0, 0 };
 
             result.x += point1.x + point2.x + point3.x;
             result.y += point1.y + point2.y + point3.y;
@@ -1160,7 +1160,7 @@ namespace FoxMaths
 
         Float3 calcNormal(const Float3& p1, const Float3& p2, const Float3& p3)
         {
-            Float3 result{0};
+            Float3 result{ 0 };
             // Calculate vectors
             const float var1x = p2.x - p1.x;
             const float var1y = p2.y - p1.y;
