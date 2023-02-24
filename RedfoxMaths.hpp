@@ -22,19 +22,38 @@ namespace RedFoxMaths
         float x;
         float y;
 
-        float CrossProduct2D(Float2 other) const;
+        float CrossProduct(Float2 other) const;
 
         float DotProduct(const Float2* other) const;
 
         void PlanRotation(float angle);
-
-        Float2 operator+(Float2& other);
-        Float2 operator*(float& multiplicator);
-        bool operator==(Float2& other) { return (x == other.x) && (y == other.y); }
-
         float Magnitude();
+        void Normalize();
+        Float2 GetNormalized();
+        static Float2 Lerp(const Float2& a, const Float2& b, const float& time);
 
-        Float2 operator/(float divider);
+        Float2 operator+(const Float2& other);
+        Float2 operator-(const Float2& other);
+        Float2 operator*(const int& multiplicator);
+        Float2 operator*(const float& multiplicator);
+        Float2 operator/(const float& divider);
+        Float2 operator-();
+        friend Float2 operator+(const Float2& left, const Float2& right);
+        friend Float2 operator-(const Float2& left, const Float2& right);
+        friend Float2 operator*(const Float2& left, const float multiplier);
+        friend Float2 operator/(const Float2& left, const float divider);
+
+        friend Float2& operator+=(Float2& left, const Float2& right);
+        friend Float2& operator-=(Float2& left, const Float2& right);
+        friend Float2& operator*=(Float2& left, const float multipler);
+        friend Float2& operator/=(Float2& left, const float divider);
+
+        friend bool operator<(const Float2& left, const Float2& right);
+        friend bool operator<=(const Float2& left, const Float2& right);
+        friend bool operator>(const Float2& left, const Float2& right);
+        friend bool operator>=(const Float2& left, const Float2& right);
+
+        bool operator==(Float2& other);
     };
 
     class Float3
@@ -48,11 +67,11 @@ namespace RedFoxMaths
 
         float DotProduct(const Float3 vec3) const;
 
-        Float3 operator+(Float3& other);
-        Float3 operator-(Float3& other);
+        Float3 operator+(const Float3& other);
+        Float3 operator-(const Float3& other);
         Float3 operator-();
-        Float3 operator*(float& multiplicator);
-        Float3 operator*(int& multiplicator);
+        Float3 operator*(const float& multiplicator);
+        Float3 operator*(const int& multiplicator);
         friend Float3 operator+(const Float3& left, const Float3& right);
         friend Float3 operator-(const Float3& left, const Float3& right);
         friend Float3 operator*(const Float3& left, const float multiplier);
@@ -101,10 +120,27 @@ namespace RedFoxMaths
         float z;
         float w;
 
-        float DotProduct(Float4& other) const;
+        float DotProduct(const Float4& other) const;
 
-        Float4 operator+(Float4& other);
-        Float4 operator*(float& multiplicator);
+        Float4 operator+(const Float4& other);
+        Float4 operator-(const Float4& other);
+        Float4 operator-();
+        Float4 operator*(const float& multiplicator);
+        Float4 operator*(const int& multiplicator);
+        friend Float4 operator+(const Float4& left, const Float4& right);
+        friend Float4 operator-(const Float4& left, const Float4& right);
+        friend Float4 operator*(const Float4& left, const float multiplier);
+        friend Float4 operator/(const Float4& left, const float divider);
+
+        friend Float4& operator+=(Float4& left, const Float4& right);
+        friend Float4& operator-=(Float4& left, const Float4& right);
+        friend Float4& operator*=(Float4& left, const float multipler);
+        friend Float4& operator/=(Float4& left, const float divider);
+
+        friend bool operator<(const Float4& left, const Float4& right);
+        friend bool operator<=(const Float4& left, const Float4& right);
+        friend bool operator>(const Float4& left, const Float4& right);
+        friend bool operator>=(const Float4& left, const Float4& right);
 
         Float4(const Float3& f3, float w = 1.0f);
         Float4(float x = 0, float y = 0, float z = 0, float w = 1.0f);
@@ -292,11 +328,13 @@ namespace RedFoxMaths
     }
 #pragma endregion
 
+    // ----------------------------------------------------------- [Implementation] -----------------------------------------------------------
+
 #ifdef REDFOXMATHS_IMPLEMENTATION
 
 #pragma region Float2
 
-    float Float2::CrossProduct2D(Float2 other) const
+    float Float2::CrossProduct(Float2 other) const
     {
         return this->x * other.y - this->y * other.x;
     }
@@ -313,7 +351,39 @@ namespace RedFoxMaths
         this->y = tmpx * sinf(DEG2RAD * angle) + this->y * cosf(DEG2RAD * angle);
     }
 
-    Float2 Float2::operator+(Float2& other)
+    float Float2::Magnitude()
+    {
+        return sqrtf(x * x + y * y);
+    }
+
+    void Float2::Normalize()
+    {
+        float mag = Magnitude();
+
+        x = x / mag;
+        y = y / mag;
+    }
+
+    Float2 Float2::GetNormalized()
+    {
+        float mag = Magnitude();
+
+        return { x / mag, y / mag };
+    }
+
+    Float2 Float2::Lerp(const Float2& a, const Float2& b, const float& time)
+    {
+        return { Misc::Lerp(time, a.x, b.x), Misc::Lerp(time, a.y, b.y) };
+    }
+
+#pragma region operators
+    bool Float2::operator==(Float2& other)
+    {
+        return (x <= other.x + FLOATCOMPACCURATE && x >= other.x - FLOATCOMPACCURATE) &&
+            (y <= other.y + FLOATCOMPACCURATE && y >= other.y - FLOATCOMPACCURATE);
+    }
+
+    Float2 Float2::operator+(const Float2& other)
     {
         Float2 result;
         result.x = x + other.x;
@@ -321,23 +391,110 @@ namespace RedFoxMaths
         return result;
     }
 
-    Float2 Float2::operator*(float& multiplicator)
+    Float2 operator+(const Float2& left, const Float2& right)
+    {
+        return { left.x + right.x, left.y + right.y };
+    }
+
+    Float2 Float2::operator-(const Float2& other)
+    {
+        Float2 result;
+        result.x = x - other.x;
+        result.y = y - other.y;
+        return result;
+    }
+
+    Float2 Float2::operator-()
+    {
+        return { -x, -y };
+    }
+
+    Float2 operator-(const Float2& left, const Float2& right)
+    {
+        return { left.x - right.x, left.y - right.y };
+    }
+
+    Float2 Float2::operator*(const float& multiplicator)
     {
         return { x * multiplicator, y * multiplicator };
     }
 
-    float Float2::Magnitude()
+    Float2 operator*(const Float2& left, const float multiplier)
     {
-        return sqrtf(x * x + y * y);
+        return { left.x * multiplier, left.y * multiplier };
     }
 
-    Float2 Float2::operator/(float divider)
+    Float2 Float2::operator/(const float& divider)
     {
-        Float2 result;
-        result.x = x / divider;
-        result.y = y / divider;
-        return result;
+        return { x / divider, y / divider };
     }
+
+    Float2 operator/(const Float2& left, const float divider)
+    {
+        return { left.x / divider, left.y / divider };
+    }
+
+    Float2& operator+=(Float2& left, const Float2& right)
+    {
+        left = left + right;
+        return left;
+    }
+
+    Float2& operator-=(Float2& left, const Float2& right)
+    {
+        left = left - right;
+        return left;
+    }
+
+    Float2& operator*=(Float2& left, const float multipler)
+    {
+        left = left * multipler;
+        return left;
+    }
+
+    Float2& operator/=(Float2& left, const float divider)
+    {
+        left = left / divider;
+        return left;
+    }
+
+    Float2 Float2::operator*(const int& multiplicator)
+    {
+        return { x * multiplicator, y * multiplicator };
+    }
+
+    bool operator<(const Float2& left, const Float2& right)
+    {
+        if (left.x < right.x && left.y < right.y)
+            return true;
+        else
+            return false;
+    }
+
+    bool operator<=(const Float2& left, const Float2& right)
+    {
+        if (left.x <= right.x && left.y <= right.y)
+            return true;
+        else
+            return false;
+    }
+
+    bool operator>(const Float2& left, const Float2& right)
+    {
+        if (left.x > right.x && left.y > right.y)
+            return true;
+        else
+            return false;
+    }
+
+    bool operator>=(const Float2& left, const Float2& right)
+    {
+        if (left.x >= right.x && left.y >= right.y)
+            return true;
+        else
+            return false;
+    }
+#pragma endregion 
 
 #pragma endregion
 
@@ -403,7 +560,7 @@ namespace RedFoxMaths
     }
 
 #pragma region operators
-    Float3 Float3::operator+(Float3& other)
+    Float3 Float3::operator+(const Float3& other)
     {
         Float3 result;
         result.x = x + other.x;
@@ -417,7 +574,7 @@ namespace RedFoxMaths
         return { left.x + right.x, left.y + right.y, left.z + right.z };
     }
 
-    Float3 Float3::operator-(Float3& other)
+    Float3 Float3::operator-(const Float3& other)
     {
         Float3 result;
         result.x = x - other.x;
@@ -436,7 +593,7 @@ namespace RedFoxMaths
         return { left.x - right.x, left.y - right.y, left.z - right.z };
     }
 
-    Float3 Float3::operator*(float& multiplicator)
+    Float3 Float3::operator*(const float& multiplicator)
     {
         return { x * multiplicator, y * multiplicator, z * multiplicator };
     }
@@ -475,7 +632,7 @@ namespace RedFoxMaths
         return left;
     }
 
-    Float3 Float3::operator*(int& multiplicator)
+    Float3 Float3::operator*(const int& multiplicator)
     {
         return { x * multiplicator, y * multiplicator, z * multiplicator };
     }
@@ -533,23 +690,9 @@ namespace RedFoxMaths
         w = inw;
     }
 
-    float Float4::DotProduct(Float4& other) const
+    float Float4::DotProduct(const Float4& other) const
     {
         return x * other.x + y * other.y + z * other.z + w * other.w;
-    }
-
-    Float4 Float4::operator+(Float4& other)
-    {
-        Float4 result;
-        result.x = x + other.x;
-        result.y = y + other.y;
-        result.z = z + other.z;
-        return result;
-    }
-
-    Float4 Float4::operator*(float& multiplicator)
-    {
-        return { x * multiplicator, y * multiplicator, z * multiplicator, w * multiplicator };
     }
 
     float Float4::Magnitude()
@@ -596,6 +739,121 @@ namespace RedFoxMaths
     {
         return { x, y, z };
     }
+
+
+#pragma region operators
+    Float4 Float4::operator+(const Float4& other)
+    {
+        Float4 result;
+        result.x = x + other.x;
+        result.y = y + other.y;
+        result.z = z + other.z;
+        result.w = w + other.w;
+        return result;
+    }
+
+    Float4 operator+(const Float4& left, const Float4& right)
+    {
+        return { left.x + right.x, left.y + right.y, left.z + right.z, left.w + right.w };
+    }
+
+    Float4 Float4::operator-(const Float4& other)
+    {
+        Float4 result;
+        result.x = x - other.x;
+        result.y = y - other.y;
+        result.z = z - other.z;
+        result.w = w - other.w;
+        return result;
+    }
+
+    Float4 Float4::operator-()
+    {
+        return { -x, -y, -z, -w };
+    }
+
+    Float4 operator-(const Float4& left, const Float4& right)
+    {
+        return { left.x - right.x, left.y - right.y, left.z - right.z, left.w - right.w };
+    }
+
+    Float4 Float4::operator*(const float& multiplicator)
+    {
+        return { x * multiplicator, y * multiplicator, z * multiplicator, w * multiplicator };
+    }
+
+    Float4 operator*(const Float4& left, const float multiplier)
+    {
+        return { left.x * multiplier, left.y * multiplier, left.z * multiplier, left.w * multiplier };
+    }
+
+    Float4 operator/(const Float4& left, const float divider)
+    {
+        return { left.x / divider, left.y / divider, left.z / divider, left.w / divider };
+    }
+
+    Float4& operator+=(Float4& left, const Float4& right)
+    {
+        left = left + right;
+        return left;
+    }
+
+    Float4& operator-=(Float4& left, const Float4& right)
+    {
+        left = left - right;
+        return left;
+    }
+
+    Float4& operator*=(Float4& left, const float multipler)
+    {
+        left = left * multipler;
+        return left;
+    }
+
+    Float4& operator/=(Float4& left, const float divider)
+    {
+        left = left / divider;
+        return left;
+    }
+
+    Float4 Float4::operator*(const int& multiplicator)
+    {
+        return { x * multiplicator, y * multiplicator, z * multiplicator, w * multiplicator };
+    }
+
+    bool operator<(const Float4& left, const Float4& right)
+    {
+        if (left.x < right.x && left.y < right.y && left.z < right.z && left.w < right.w)
+            return true;
+        else
+            return false;
+    }
+
+    bool operator<=(const Float4& left, const Float4& right)
+    {
+        if (left.x <= right.x && left.y <= right.y && left.z <= right.z && left.w <= right.w)
+            return true;
+        else
+            return false;
+    }
+
+    bool operator>(const Float4& left, const Float4& right)
+    {
+        if (left.x > right.x && left.y > right.y && left.z > right.z && left.w > right.w)
+            return true;
+        else
+            return false;
+    }
+
+    bool operator>=(const Float4& left, const Float4& right)
+    {
+        if (left.x >= right.x && left.y >= right.y && left.z >= right.z && left.w >= right.w)
+            return true;
+        else
+            return false;
+    }
+#pragma endregion 
+
 #pragma endregion
 
     // ----------------------------[Matrix]----------------------------
