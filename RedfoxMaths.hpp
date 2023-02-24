@@ -1,8 +1,11 @@
 #pragma once
 
-#define MY_PI 3.14159265f
-#define DEG2RAD MY_PI/180.0f
-#define RAD2DEG 180/MY_PI
+#ifndef PI
+#define PI 3.14159265f
+#endif
+
+#define DEG2RAD PI/180.0f
+#define RAD2DEG 180/PI
 
 #define FLOATCOMPACCURATE 0.0001f
 #include <math.h>
@@ -144,6 +147,7 @@ namespace RedFoxMaths
         static Mat4 GetRotationX(const float& angle);
         static Mat4 GetRotationY(const float& angle);
         static Mat4 GetRotationZ(const float& angle);
+        static Mat4 GetRotation(const float& yaw, const float& pitch, const float& roll);
 
         static Mat4 GetTranslation(const Float3& translation);
         static Mat4 GetScale(const Float3& scale);
@@ -165,7 +169,7 @@ namespace RedFoxMaths
 
         static Mat4 CreateTransformMatrix(const Float3& position, const Float3& rotationDEG, const Float3& scale);
         static Mat4 CreateTransformMatrix(const Float3& position, const Quaternion& rotation, const Float3& scale);
-        
+
         static Mat4 GetOrthographicMatrix(float right, float left, float top, float bottom, float far, float near);
         static Mat4 GetPerspectiveMatrix(float aspect, float FOV, float far, float near);
 
@@ -217,9 +221,12 @@ namespace RedFoxMaths
         static Quaternion Hamilton(const Quaternion& right, const Quaternion& left);
 
         //Return a Quaternion from corresponding Euler Angles
-        static Quaternion Euler(const float& roll, const float& pitch, const float& yaw);
+        static Quaternion FromEuler(const float& roll, const float& pitch, const float& yaw);
         //Return a Quaternion from corresponding Euler Angles
-        static Quaternion Euler(const Float3& eulerAngles);
+        static Quaternion FromEuler(const Float3& eulerAngles);
+        //Return a Float3 as roll pitch yaw from corresponding quaternion
+        static Float3 ToEuler(const Quaternion& quaternion);
+        Float3 ToEuler();
 
         //Return a Quaternion from corresponding axis and radian angle
         static Quaternion AngleAxis(const Float3& axis, const float& angle);
@@ -759,6 +766,11 @@ namespace RedFoxMaths
         return result;
     }
 
+    Mat4 Mat4::GetRotation(const float& yaw, const float& pitch, const float& roll)
+    {
+        return GetRotationY(pitch) * GetRotationX(yaw) * GetRotationZ(roll);
+    }
+
     Mat4 Mat4::GetTranslation(const Float3& translation)
     {
         Mat4 result;
@@ -961,12 +973,12 @@ namespace RedFoxMaths
 
     Quaternion::Quaternion(const float& roll, const float& pitch, const float& yaw)
     {
-        *this = Euler(roll, pitch, yaw);
+        *this = FromEuler(roll, pitch, yaw);
     }
 
     Quaternion::Quaternion(const Float3& eulerAngles)
     {
-        *this = Euler(eulerAngles);
+        *this = FromEuler(eulerAngles);
     }
 #pragma endregion
 
@@ -1021,7 +1033,7 @@ namespace RedFoxMaths
         return result;
     }
 
-    Quaternion Quaternion::Euler(const float& roll, const float& pitch, const float& yaw)
+    Quaternion Quaternion::FromEuler(const float& roll, const float& pitch, const float& yaw)
     {
         Quaternion result;
 
@@ -1040,9 +1052,29 @@ namespace RedFoxMaths
         return result;
     }
 
-    Quaternion Quaternion::Euler(const Float3& EulerAngles)
+    Quaternion Quaternion::FromEuler(const Float3& EulerAngles)
     {
-        return Euler(EulerAngles.x, EulerAngles.y, EulerAngles.z);
+        return FromEuler(EulerAngles.x, EulerAngles.y, EulerAngles.z);
+    }
+
+    Float3 Quaternion::ToEuler(const Quaternion& quaternion)
+    {
+        return
+        {
+            atan2f(2 * (quaternion.a * quaternion.b + quaternion.c * quaternion.d), 1 - 2 * (quaternion.b * quaternion.b + quaternion.c * quaternion.c)),
+            asinf(2 * (quaternion.a * quaternion.c - quaternion.d * quaternion.b)),
+            atan2f(2 * (quaternion.a * quaternion.d + quaternion.b * quaternion.c), 1 - 2 * (quaternion.c * quaternion.c + quaternion.d * quaternion.d))
+        };
+    }
+
+    Float3 Quaternion::ToEuler()
+    {
+        return
+        {
+            atan2f(2 * (a * b + c * d), 1 - 2 * (b * b + c * c)),
+            asinf(2 * (a * c - d * b)),
+            atan2f(2 * (a * d + b * c), 1 - 2 * (c * c + d * d))
+        };
     }
 
     Quaternion Quaternion::AngleAxis(const Float3& axis, const float& angle)
