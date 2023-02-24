@@ -8,7 +8,7 @@
 #include <math.h>
 #include <cstdarg>
 
-namespace FoxMaths
+namespace RedFoxMaths
 {
     // ----------------- [Vector] -----------------
 #pragma region Vector
@@ -85,7 +85,7 @@ namespace FoxMaths
         static Float3 Lerp(const Float3& a, const Float3& b, const float& time);
     };
 
-    inline bool operator==(const FoxMaths::Float3& f1, const FoxMaths::Float3& f2)
+    inline bool operator==(const RedFoxMaths::Float3& f1, const RedFoxMaths::Float3& f2)
     {
         return ((f1.x == f2.x) && (f1.y == f2.y) && (f1.z == f2.z));
     }
@@ -148,11 +148,16 @@ namespace FoxMaths
         static Mat4 GetTranslation(const Float3& translation);
         static Mat4 GetScale(const Float3& scale);
 
-        float mat[4][4] = {
-            {1.f, 0.f, 0.f, 0.f},
-            {0.f, 1.f, 0.f, 0.f},
-            {0.f, 0.f, 1.f, 0.f},
-            {0.f, 0.f, 0.f, 1.f}
+        union
+        {
+            float mat[4][4] = {
+                {1.f, 0.f, 0.f, 0.f},
+                {0.f, 1.f, 0.f, 0.f},
+                {0.f, 0.f, 1.f, 0.f},
+                {0.f, 0.f, 0.f, 1.f}
+            };
+
+            float mat16[16];
         };
 
         void operator=(const Mat4& other);
@@ -160,6 +165,9 @@ namespace FoxMaths
 
         static Mat4 CreateTransformMatrix(const Float3& position, const Float3& rotationDEG, const Float3& scale);
         static Mat4 CreateTransformMatrix(const Float3& position, const Quaternion& rotation, const Float3& scale);
+        
+        static Mat4 GetOrthographicMatrix(float right, float left, float top, float bottom, float far, float near);
+        static Mat4 GetPerspectiveMatrix(float aspect, float FOV, float far, float near);
 
         Mat4 operator*(const Mat4& other) const;
         Float4 operator*(const Float4& ft4);
@@ -277,7 +285,7 @@ namespace FoxMaths
     }
 #pragma endregion
 
-#ifdef FOXMATHS_IMPLEMENTATION
+#ifdef REDFOXMATHS_IMPLEMENTATION
 
 #pragma region Float2
 
@@ -787,6 +795,32 @@ namespace FoxMaths
     Mat4 Mat4::CreateTransformMatrix(const Float3& position, const Quaternion& rotation, const Float3& scale)
     {
         return GetTranslation(position) * rotation.GetRotationMatrix() * GetScale(scale);
+    }
+
+    Mat4 Mat4::GetOrthographicMatrix(float right, float left, float top, float bottom, float far, float near)
+    {
+        float result[4][4] = {
+            {2.f / (right - left), 0.f, 0.f, -(right + left) / (right - left)},
+            {0.f, 2.f / (top - bottom), 0.f, -(top + bottom) / (top - bottom)},
+            {0.f, 0.f, -2.f / (far - near), -(far + near) / (far - near)},
+            {0.f, 0.f, 0.f, 1.f}
+        };
+
+        return result;
+    }
+
+    Mat4 Mat4::GetPerspectiveMatrix(float aspect, float FOV, float far, float near)
+    {
+        float a = 1.f / tanf(DEG2RAD * FOV / 2.f);
+
+        float result[4][4] = {
+            {a / aspect, 0.f, 0.f, 0.f},
+            {0.f, a, 0.f, 0.f},
+            {0.f, 0.f, -(far + near) / (far - near), -(2 * far * near) / (far - near)},
+            {0.f, 0.f, -1.f, 0.f}
+        };
+
+        return result;
     }
 
     Mat4 Mat4::GetTransposedMatrix()
