@@ -377,7 +377,7 @@ namespace RedFoxMaths
     }
 
 #pragma region operators
-    bool Float2::operator==(Float2& pOther)
+    bool Float2::operator==(const Float2& pOther)
     {
         return (x <= pOther.x + FLOATCOMPACCURATE && x >= pOther.x - FLOATCOMPACCURATE) &&
             (y <= pOther.y + FLOATCOMPACCURATE && y >= pOther.y - FLOATCOMPACCURATE);
