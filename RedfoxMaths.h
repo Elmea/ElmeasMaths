@@ -162,6 +162,14 @@ namespace RedFoxMaths
 
             w = 1;
         }
+
+        bool operator==(const Float4& pOther)
+        {
+            return (x <= pOther.x + FLOATCOMPACCURATE && x >= pOther.x - FLOATCOMPACCURATE) && 
+                    (y <= pOther.y + FLOATCOMPACCURATE && y >= pOther.y - FLOATCOMPACCURATE) && 
+                    (z <= pOther.z + FLOATCOMPACCURATE && z >=pOther.z - FLOATCOMPACCURATE) && 
+                    (w <= pOther.w + FLOATCOMPACCURATE && w >=pOther.w - FLOATCOMPACCURATE);
+        }
     };
 
 #pragma endregion Vector
