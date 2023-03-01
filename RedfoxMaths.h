@@ -341,7 +341,7 @@ namespace RedFoxMaths
 
     float Float2::DotProduct(const Float2& pOther) const
     {
-        return (this->x * pOther->x) + (this->y * pOther->y);
+        return (this->x * pOther.x) + (this->y * pOther.y);
     }
 
     void Float2::PlanRotation(float pAngle)
