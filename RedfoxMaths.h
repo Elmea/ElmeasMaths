@@ -373,7 +373,7 @@ namespace RedFoxMaths
 
     Float2 Float2::Lerp(const Float2& a, const Float2& b, const float& pTime)
     {
-        return { Misc::Lerp(pTime, a.x, b.x), Misc::Lerp(pTime, a.y, b.y) };
+        return { pTime * a.x + (1 - pTime) * b.x, pTime * a.y + (1 - pTime) * b.y };
     }
 
 #pragma region operators
@@ -554,9 +554,9 @@ namespace RedFoxMaths
         };
     }
 
-    Float3 Float3::Lerp(const Float3& a, const Float3& b, const float& pTime)
+    Float3 Float3::Lerp(const Float3& a, const Float3& b, const float& )
     {
-        return Float3(Misc::Lerp(pTime, a.x, b.x), Misc::Lerp(pTime, a.y, b.y), Misc::Lerp(pTime, a.z, b.z));
+        return Float3(pTime * a.x + (1 - pTime) * b.x, pTime * a.y + (1 - pTime) * b.y, pTime * a.z + (1 - pTime) * b.z);
     }
 
 #pragma region operators
@@ -1312,7 +1312,21 @@ namespace RedFoxMaths
 
     Quaternion Quaternion::FromEuler(const Float3& EulerpAngles)
     {
-        return FromEuler(EulerpAngles.x, EulerpAngles.y, EulerpAngles.z);
+        Quaternion result;
+
+        const float cr = cosf(EulerpAngles.x * 0.5f);
+        const float sr = sinf(EulerpAngles.x * 0.5f);
+        const float cp = cosf(EulerpAngles.y * 0.5f);
+        const float sp = sinf(EulerpAngles.y * 0.5f);
+        const float cy = cosf(EulerpAngles.z * 0.5f);
+        const float sy = sinf(EulerpAngles.z * 0.5f);
+
+        result.a = cr * cp * cy + sr * sp * sy;
+        result.b = sr * cp * cy - cr * sp * sy;
+        result.c = cr * sp * cy + sr * cp * sy;
+        result.d = cr * cp * sy - sr * sp * cy;
+
+        return result;
     }
 
     Float3 Quaternion::ToEuler(const Quaternion& quaternion)
