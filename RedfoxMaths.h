@@ -1,5 +1,5 @@
-#ifndef REDFOXMATHS
-#define REDFOXMATHS
+#ifndef REDFOXMATHS_HPP
+#define REDFOXMATHS_HPP
 
 #ifndef PI
 #define PI 3.14159265f
@@ -236,7 +236,8 @@ namespace RedFoxMaths
         static Mat4 GetIdentityMatrix();
         
         Float4 GetMatLine(int index);
-        
+        Quaternion ToQuaternion();
+
         bool operator==(const Mat4& pOther);
     };
     
@@ -347,12 +348,13 @@ namespace RedFoxMaths
         Float3 CalcNormal(const Float3& p1, const Float3& p2, const Float3& p3);
     }
 #pragma endregion
-    
-    
+}
 #endif
     // ----------------------------------------------------------- [Implementation] -----------------------------------------------------------
 #ifdef REDFOXMATHS_IMPLEMENTATION
 
+namespace RedFoxMaths
+{
 #pragma region Float2
     
     float Float2::CrossProduct(Float2 pOther) const
@@ -1171,6 +1173,17 @@ namespace RedFoxMaths
         res = matrice;
         return res;
     }
+
+    Quaternion Mat4::ToQuaternion()
+    {
+        Quaternion res;
+        res.a = sqrt(1 + mat[0][0] + mat[1][1] + mat[2][2]) / 2;
+        res.b = (mat[2][1] - mat[1][2]) / (4 * res.a);
+        res.c = (mat[0][2] - mat[2][0]) / (4 * res.a);
+        res.d = (mat[1][0] - mat[0][1]) / (4 * res.a);
+
+        return res;
+    }
     
     Mat4 Mat4::GetSubmat(int l, int c)
     {
@@ -1570,6 +1583,5 @@ namespace RedFoxMaths
         }
     }
 #pragma endregion
-    
-#endif
 }
+#endif
