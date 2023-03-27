@@ -353,7 +353,7 @@ namespace RedFoxMaths
 }
 #endif
     // ----------------------------------------------------------- [Implementation] -----------------------------------------------------------
-#ifdef REDFOXMATHS_IMPLEMENTATION
+// #ifdef REDFOXMATHS_IMPLEMENTATION
 
 namespace RedFoxMaths
 {
@@ -1167,7 +1167,7 @@ namespace RedFoxMaths
         return result;
     }
 
-    static Mat4 LookAt(Float3 position, Float3 target, Float3 up)
+    Mat4 LookAt(Float3 position, Float3 target, Float3 up)
     {
         Float3 zaxis = (target - position).GetNormalized();    
         Float3 xaxis = zaxis.CrossProduct(up).GetNormalized();
