@@ -219,6 +219,8 @@ namespace RedFoxMaths
         
         static Mat4 GetOrthographicMatrix(float pRight, float pLeft, float pTop, float pBottom, float pFar, float pNear);
         static Mat4 GetPerspectiveMatrix(float aspect, float FOV, float pFar, float pNear);
+
+        static Mat4 LookAt(Float3 position, Float3 target);
         
         Mat4 operator*(const Mat4& pOther) const;
         Float4 operator*(const Float4& ft4);
@@ -1021,6 +1023,21 @@ namespace RedFoxMaths
         
         return result;
     }
+
+    bool Mat4::operator==(const Mat4& pOther)
+    {
+        short  counter = 0;
+        for (int i=0; i < 16; i += 4)
+        {
+            bool check =
+                mat16[i]     == pOther.mat16[i]     && 
+                mat16[i + 1] == pOther.mat16[i + 1] &&
+                mat16[i + 2] == pOther.mat16[i + 2] &&
+                mat16[i + 3] == pOther.mat16[i + 3];
+            counter += check;
+        }
+        return counter;
+    }
     
 #pragma endregion
     
@@ -1149,6 +1166,26 @@ namespace RedFoxMaths
         }
         return result;
     }
+
+    static Mat4 LookAt(Float3 position, Float3 target, Float3 up)
+    {
+        Float3 zaxis = (target - position).GetNormalized();    
+        Float3 xaxis = zaxis.CrossProduct(up).GetNormalized();
+        Float3 yaxis = xaxis.CrossProduct(zaxis);
+
+        zaxis = -zaxis;
+
+        float view[4][4] = {
+            xaxis.x, xaxis.y, xaxis.z, -xaxis.DotProduct(position),
+            yaxis.x, yaxis.y, yaxis.z, -yaxis.DotProduct(position),
+            zaxis.x, zaxis.y, zaxis.z, -zaxis.DotProduct(position),
+            0, 0, 0, 1
+        };
+
+        Mat4 viewMatrix = view;
+
+        return viewMatrix;
+    }
     
     float Mat4::GetDeterminent()
     {
@@ -1272,20 +1309,6 @@ namespace RedFoxMaths
         return (Float4)(mat[index][0], mat[index][1], mat[index][2], mat[index][3]);
     }
     
-    bool Mat4::operator==(const Mat4& pOther)
-    {
-        short  counter = 0;
-        for (int i=0; i < 16; i += 4)
-        {
-            bool check =
-                mat16[i]     == pOther.mat16[i]     && 
-                mat16[i + 1] == pOther.mat16[i + 1] &&
-                mat16[i + 2] == pOther.mat16[i + 2] &&
-                mat16[i + 3] == pOther.mat16[i + 3];
-            counter += check;
-        }
-        return counter;
-    }
 #pragma endregion
     
     // --------------------------[Quaternion]--------------------------
