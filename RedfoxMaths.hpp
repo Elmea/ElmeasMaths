@@ -220,7 +220,7 @@ namespace RedFoxMaths
         static Mat4 GetOrthographicMatrix(float pRight, float pLeft, float pTop, float pBottom, float pFar, float pNear);
         static Mat4 GetPerspectiveMatrix(float aspect, float FOV, float pFar, float pNear);
 
-        static Mat4 LookAt(Float3 position, Float3 target);
+        static Mat4 LookAt(Float3 position, Float3 target, Float3 up);
         
         Mat4 operator*(const Mat4& pOther) const;
         Float4 operator*(const Float4& ft4);
