@@ -354,6 +354,7 @@ namespace RedFoxMaths
 #endif
     // ----------------------------------------------------------- [Implementation] -----------------------------------------------------------
 #ifdef REDFOXMATHS_IMPLEMENTATION
+#ifndef REDFOXMATHS_IMPLEMENTED
 
 namespace RedFoxMaths
 {
@@ -1629,4 +1630,5 @@ namespace RedFoxMaths
     }
 #pragma endregion
 }
+#endif
 #endif
