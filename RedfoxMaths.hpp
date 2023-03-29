@@ -355,6 +355,7 @@ namespace RedFoxMaths
     // ----------------------------------------------------------- [Implementation] -----------------------------------------------------------
 #ifdef REDFOXMATHS_IMPLEMENTATION
 #ifndef REDFOXMATHS_IMPLEMENTED
+#define REDFOXMATHS_IMPLEMENTED
 
 namespace RedFoxMaths
 {
