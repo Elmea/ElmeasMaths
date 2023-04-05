@@ -89,7 +89,7 @@ namespace RedFoxMaths
         friend bool operator>(const Float3& pLeft, const Float3& pRight);
         friend bool operator>=(const Float3& pLeft, const Float3& pRight);
         
-        Float3 DirToEuler(Float3 direction, const Float3& up);
+        static Float3 DirToEuler(Float3 direction, const Float3& up);
         
         Float3(float x = 0, float y = 0, float z = 0);
         
