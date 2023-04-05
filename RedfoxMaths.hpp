@@ -590,7 +590,7 @@ namespace RedFoxMaths
     Float3 Float3::DirToEuler(Float3 direction, const Float3& up)
     {
         Float3 euler{0, 0, 0};
-        Float3 dir = direction.getNormalized();
+        Float3 dir = direction.GetNormalized();
 
         euler.y = atan2(dir.x, dir.z);
         euler.x = atan2(dir.y, -sqrtf(dir.x * dir.x + dir.z * dir.z));
