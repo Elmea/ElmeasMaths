@@ -89,7 +89,7 @@ namespace RedFoxMaths
         friend bool operator>(const Float3& pLeft, const Float3& pRight);
         friend bool operator>=(const Float3& pLeft, const Float3& pRight);
         
-        static Float3 DirToEuler(Float3 direction, const Float3& up);
+        static Float3 DirToEuler(Float3 direction);
         
         Float3(float x = 0, float y = 0, float z = 0);
         
@@ -587,7 +587,7 @@ namespace RedFoxMaths
         return Float3(pTime * a.x + (1 - pTime) * b.x, pTime * a.y + (1 - pTime) * b.y, pTime * a.z + (1 - pTime) * b.z);
     }
     
-    Float3 Float3::DirToEuler(Float3 direction, const Float3& up)
+    Float3 Float3::DirToEuler(Float3 direction)
     {
         Float3 euler{0, 0, 0};
         Float3 dir = direction.GetNormalized();
