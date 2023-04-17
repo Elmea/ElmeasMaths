@@ -349,6 +349,8 @@ namespace RedFoxMaths
         Float3 BarrycentreF3(Float3 point1, Float3 point2, Float3 point3);
         
         Float3 CalcNormal(const Float3& p1, const Float3& p2, const Float3& p3);
+
+        float Clamp(const float value, const float min, const float max);
     }
 #pragma endregion
 }
