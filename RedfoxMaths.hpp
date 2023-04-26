@@ -90,6 +90,7 @@ namespace RedFoxMaths
         friend bool operator>=(const Float3& pLeft, const Float3& pRight);
         
         static Float3 DirToEuler(Float3 direction);
+        static Float3 EulerToDir(Float3 euler);
         
         Float3(float x = 0, float y = 0, float z = 0);
         
@@ -598,6 +599,17 @@ namespace RedFoxMaths
         euler.x = atan2(dir.y, -sqrtf(dir.x * dir.x + dir.z * dir.z));
 
         return euler;
+    }
+
+    Float3 Float3::EulerToDir(Float3 euler)
+    {
+        Float3 result;
+
+        result.x = cosf(euler.x) * cosf(euler.y)
+        result.y = sinf(euler.x) * cosf(euler.y)
+        result.z = sinf(euler.y)
+
+        return result;
     }
 
 #pragma region operators
