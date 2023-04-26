@@ -605,9 +605,9 @@ namespace RedFoxMaths
     {
         Float3 result;
 
-        result.x = cosf(euler.x) * cosf(euler.y)
-        result.y = sinf(euler.x) * cosf(euler.y)
-        result.z = sinf(euler.y)
+        result.x = cosf(euler.x) * cosf(euler.y);
+        result.y = sinf(euler.x) * cosf(euler.y);
+        result.z = sinf(euler.y);
 
         return result;
     }
