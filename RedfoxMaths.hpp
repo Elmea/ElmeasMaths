@@ -1417,7 +1417,7 @@ namespace RedFoxMaths
         return result;
     }
     
-    Quaternion Quaternion::FromEuler(const float& pYaw, const float& pPitch, const float& pRoll)
+    Quaternion Quaternion::FromEuler(const float& pRoll, const float& pPitch, const float& pYaw)
     {
         Quaternion result;
         
