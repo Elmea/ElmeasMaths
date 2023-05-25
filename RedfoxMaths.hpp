@@ -352,6 +352,10 @@ namespace RedFoxMaths
         Float3 CalcNormal(const Float3& p1, const Float3& p2, const Float3& p3);
 
         float Clamp(const float value, const float min, const float max);
+
+        Float3 Clamp(const Float3 value , const float min, const float max);
+
+        Float3 Clamp(const Float3 value , const Float3 min, const Float3 max);
     }
 #pragma endregion
 }
@@ -1566,6 +1570,27 @@ namespace RedFoxMaths
             if (value > max)
                 return max;
             return value;
+        }
+        Float3 Clamp(const Float3 value , const float min, const float max)
+        {
+            Float3 result = value;
+
+            result.x = Clamp(result.x, min, max);
+            result.y = Clamp(result.y, min, max);
+            result.z = Clamp(result.z, min, max);
+
+            return (result);
+        }
+
+        Float3 Clamp(const Float3 value , const Float3 min, const Float3 max)
+        {
+            Float3 result = value;
+
+            result.x = Clamp(result.x, min.x, max.x);
+            result.y = Clamp(result.y, min.y, max.y);
+            result.z = Clamp(result.z, min.z, max.z);
+
+            return (result);
         }
         
         float Pythagoreantheorem(int nb_values, ...)
