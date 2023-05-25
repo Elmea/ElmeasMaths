@@ -595,8 +595,8 @@ namespace RedFoxMaths
         Float3 euler{0, 0, 0};
         Float3 dir = direction.GetNormalized();
 
+        euler.x = asinf(dir.y);
         euler.y = atan2(dir.x, dir.z);
-        euler.x = atan2(dir.y, -sqrtf(dir.x * dir.x + dir.z * dir.z));
 
         return euler;
     }
@@ -605,9 +605,10 @@ namespace RedFoxMaths
     {
         Float3 result;
 
-        result.x = cosf(euler.x) * cosf(euler.y);
-        result.y = sinf(euler.x) * cosf(euler.y);
-        result.z = sinf(euler.y);
+        result.y = sinf(euler.x);
+
+        result.x = cosf(euler.x) * sinf(euler.y);
+        result.z = cosf(euler.x) * cosf(euler.y);
 
         return result;
     }
