@@ -1417,16 +1417,16 @@ namespace RedFoxMaths
         return result;
     }
     
-    Quaternion Quaternion::FromEuler(const float& pRoll, const float& pPitch, const float& pYaw)
+    Quaternion Quaternion::FromEuler(const float& pYaw, const float& pPitch, const float& pRoll)
     {
         Quaternion result;
         
-        const float cr = cosf(pRoll * 0.5f);
-        const float sr = sinf(pRoll * 0.5f);
+        const float cr = cosf(pYaw * 0.5f);
+        const float sr = sinf(pYaw * 0.5f);
         const float cp = cosf(pPitch * 0.5f);
         const float sp = sinf(pPitch * 0.5f);
-        const float cy = cosf(pYaw * 0.5f);
-        const float sy = sinf(pYaw * 0.5f);
+        const float cy = cosf(pRoll * 0.5f);
+        const float sy = sinf(pRoll * 0.5f);
         
         result.a = cr * cp * cy + sr * sp * sy;
         result.b = sr * cp * cy - cr * sp * sy;
