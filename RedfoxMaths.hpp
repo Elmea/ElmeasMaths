@@ -611,8 +611,8 @@ namespace RedFoxMaths
 
         result.y = sinf(euler.x);
 
-        result.x = cosf(euler.x) * sinf(euler.y);
-        result.z = cosf(euler.x) * cosf(euler.y);
+        result.x = - cosf(euler.x) * sinf(euler.y);
+        result.z = - cosf(euler.x) * cosf(euler.y);
 
         return result;
     }
