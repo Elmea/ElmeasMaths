@@ -15,7 +15,7 @@ TEST(Float2, CrossProductTest) {
 }
 
 TEST(Float2, DotProductTest) {
-  float expected = glm_vec2_dot(new(vec2){ 2.f, 3.f }, new(vec2){ 4.f, 5.f });
+  float expected = glm_vec2_dot(new(vec2){ 2.f, 3.f }, new(vec2){ 4.f, 2.f });
   Float2 a ={ 2.f, 3.f, }, b = { 4.f, 5.f };
   float result = a.DotProduct(b);
   EXPECT_EQ(result, expected);
